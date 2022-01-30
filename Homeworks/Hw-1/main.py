@@ -1,6 +1,7 @@
-from flask import Flask
 
-from utils import show_requirements, show_space
+from flask import Flask, request
+
+from utils import show_requirements, show_space, show_generate_users
 
 app = Flask(__name__)
 
@@ -23,7 +24,18 @@ def requirements():
 
 @app.route('/generate-users/')
 def users():
-    pass
+    length = request.args.get('length', '10')
+
+    if length.isdigit():
+        length = int(length)
+        maximum_length = 200
+
+        if length > maximum_length:
+            return f"Length should be less than {maximum_length}"
+    else:
+        return f'Invalid length value "{length}"'
+
+    return show_generate_users(length)
 
 
 @app.route('/mean/')
